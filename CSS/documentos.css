@@ -1,0 +1,213 @@
+/* ====================================== /
+/          GESTÃO DE DOCUMENTOS  
+/ ====================================== */
+
+.foot{
+    padding-top: 230px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: hsl(206, 8%, 39%);
+    display: flex;
+    gap: 10px; 
+    flex-direction: column;
+}
+
+.foot a {
+    text-decoration: none;
+    color: var(--primary-line-color); 
+    font-weight: 500;
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.foot a:hover,
+.foot a:active {
+    background-color: var(--primary);
+    color: #fff; 
+}
+
+.foot a:hover i,
+.foot a:active i {
+    color: #fff; 
+}
+
+:root {
+    --panel-bg: #ffffff;
+    --line-color: #e5e7eb;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --icon-total: #3b82f6;
+    --icon-aprovado: #16a34a;
+    --icon-correcao: #f59e0b;
+
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+    .card .icon-total {
+        color: #3b82f6;
+    }
+
+    .card .icon-aprovado {
+        color: #16a34a;
+    }
+
+    .card .icon-correcao {
+        color: #f59e0b;
+    }
+}
+
+/* ==================================== /
+/            Cards de Icones 
+/ ==================================== */
+.card {
+    background-color: var(--card-bg);
+    color: var(--card-text);
+    box-shadow: var(--shadow);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+}
+
+.card>div {
+    display: block;
+    margin-top: 10px;
+}
+
+.card i {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 30px;
+}
+
+.card.total {
+    background: var(--panel);
+    border-radius: 22px;
+    padding: 22spx;
+    box-shadow: var(--shadow);
+    position: relative;
+    border-left: 5px solid var(--icon-total);
+}
+
+.card.aprovados {
+    background: var(--panel);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    position: relative;
+    border-left: 5px solid var(--icon-aprovado);
+}
+
+.card.correcao {
+    background: var(--panel);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    position: relative;
+    border-left: 5px solid var(--icon-correcao);
+}
+
+/* ==================================== /
+/     Painel de Documentos e Tabela 
+/ ==================================== */
+.paineldoc {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    margin-top: 30px;
+}
+
+.painel-header {
+    /* Garantem que a pesquisa fique no canto superior direito em relação ao título. */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.paineldoc h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ==================================== /
+/           Caixa de Pesquisa 
+/ ==================================== */
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--line-color);
+    border-radius: 8px;
+    padding: 8px 15px;
+    width: 250px;
+    gap: 10px;
+}
+
+.search-box input {
+    border: none;
+    background: transparent;
+    padding: 0;
+    outline: none;
+    font-size: 14px;
+    color: var(--text-primary);
+    width: 100%;
+}
+
+.search-box input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* ==================================== /
+/         Estrutura da Tabela
+/* ==================================== */
+.tabela {
+    border: 1px solid var(--line-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+.topoTabela,
+.tabLinha {
+    display: grid;
+    grid-template-columns: 2.5fr 1.5fr 1.5fr 1fr;
+    padding: 15px 20px;
+    align-items: center;
+}
+
+.topoTabela {
+    background: #25933f;
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+    border-bottom: 1px solid var(--line-color);
+    border-radius: 8px;
+}
+
+.tabLinha {
+    font-size: 14px;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--line-color);
+    transition: background-color 0.1s ease;
+}
+
+.tabLinha:hover {
+    background-color: #f3f4f6;
+    cursor: pointer;
+}
+
+.tabLinha:first-of-type {
+    border-top: none;
+}
+
+.tabLinha>div {
+    padding-right: 10px;
+}
+
+.topoTabela>div:last-child,
+.tabLinha>div:last-child {
+    text-align: left;
+} 

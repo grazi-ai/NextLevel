@@ -1,0 +1,57 @@
+/* ======================================================= */
+/*                  FREQUÊNCIA RECENTE 
+/* ======================================================= */
+
+.foot {
+    padding-top: 230px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: hsl(206, 8%, 39%);
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.foot a {
+    text-decoration: none;
+    color: var(--primary-line-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.foot a:hover,
+.foot a:active {
+    background-color: var(--primary);
+    color: #fff;
+}
+
+.foot a:hover i,
+.foot a:active i {
+    color: #fff;
+}
+
+:root {
+    --color-success: #10b981;    
+    --color-danger: #ef4444;    
+    --color-warning: #f59e0b;    
+}
+
+/* Estilo do Ícone (i) */
+.ativrecente .linha i {
+    font-size: 20px; 
+    margin-right: 15px; 
+    font-weight: 750;
+}
+
+/* === Cores dos Ícones === */
+.ativrecente .linha .icon-presente {
+    color: var(--color-success);
+}
+.ativrecente .linha .icon-falta {
+    color: var(--color-danger);
+}
+.ativrecente .linha .icon-aviso {
+    color: var(--color-warning);
+}
