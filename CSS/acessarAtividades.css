@@ -60,6 +60,7 @@
 /* Estrutura principal: Grid de 70%/30% */
 .atividade-grid {
     display: grid;
+    /* Coluna Esquerda 3fr | Coluna Direita 1fr (Total 4fr) */
     grid-template-columns: 2.5fr 1.5fr; 
     gap: 30px;
 }
@@ -224,7 +225,7 @@
 
 .tarefa-aviso {
     font-size: 13px;
-    color: var(--color-alerta); 
+    color: var(--text-primary); 
     font-weight: 600;
     margin-bottom: 25px;
 }
