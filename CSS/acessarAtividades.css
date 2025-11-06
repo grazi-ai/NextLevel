@@ -1,5 +1,5 @@
 /* ======================================================= */
-/* === PÁGINA: ACESSAR ATIVIDADE (REVISADO FINAL) === */
+/* === PÁGINA: ACESSAR ATIVIDADE (CÓDIGO FINAL) === */
 /* ======================================================= */
 
 /* --- VARIÁVEIS --- */
@@ -7,32 +7,39 @@
     --color-pdf: #ef4444; 
     --color-download: #6b7280; 
     
-    /* Sombra mais suave para todos os cards */
     --card-shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.04), 0 6px 10px rgba(0, 0, 0, 0.02);
     --card-border-color: #f1f1f1; 
     
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
     --line: #e3e6f0;
-    --primary: #217d36; /* Verde principal (Ação Principal) */
+    --primary: #217d36; 
     --btn-primary-text: #fff;
-    --btn-secondary-bg: #f9fafb; /* Fundo mais claro para botões secundários */
+    --btn-secondary-bg: #f9fafb; 
     
-    --tag-pendente-bg: #fffbe6;
-    --tag-pendente-text: #a16207;
+    /* VARIÁVEIS DE TAGS (ATUALIZADAS CONFORME A IMAGEM) */
+    --tag-pendente-bg: #ffea6243;   /* Amarelo mais claro da imagem */
+    --tag-pendente-text:#985f10; /* Amarelo/laranja mais escuro da imagem */
 
-    --color-alerta: #dc2626; /* Vermelho forte para avisos */
+    --tag-entregue-bg: #dcfce7;   /* Verde bem claro da imagem */
+    --tag-entregue-text: #22c55e; /* Verde escuro da imagem */
 
-    /* Variável do fundo do card (se não estiver root principal) */
+    --color-alerta: #dc2626; 
+
     --card-bg: #fff;
 }
+
+/* Ícone específico do título "Guerra Fria: Medo e Silêncios" */
+h2:has(i.bxs-book-reader) i {
+    color: #B85C3C;; /* verde igual à borda dos comentários */
+}
+
 
 /* --- LAYOUT DE DUAS COLUNAS --- */
 .atividade-view {
     padding-top: 20px;
 }
 
-/* Título e Status na mesma linha */
 .atividade-header {
     display: flex;
     justify-content: space-between;
@@ -50,6 +57,7 @@
     color: var(--text-secondary);
 }
 
+/* ESTILO BASE DAS TAGS */
 .atividade-header .tag {
     padding: 6px 15px;
     border-radius: 6px;
@@ -57,10 +65,22 @@
     flex-shrink: 0; 
 }
 
-/* Estrutura principal: Grid de 70%/30% */
+/* ESTILO PENDENTE */
+.tag-pendente {
+    background-color: var(--tag-pendente-bg); /* Amarelo claro */
+    color: var(--tag-pendente-text);       
+}
+
+/* ESTILO ENTREGUE */
+.tag-entregue {
+    background-color: var(--tag-entregue-bg); 
+    color: var(--tag-entregue-text);       
+}
+
+
+/* Estrutura principal: Grid (largura da coluna) */
 .atividade-grid {
     display: grid;
-    /* Coluna Esquerda 3fr | Coluna Direita 1fr (Total 4fr) */
     grid-template-columns: 2.5fr 1.5fr; 
     gap: 30px;
 }
@@ -85,20 +105,25 @@
 
 /* --- COLUNA ESQUERDA (Conteúdo) --- */
 
-/* 1. BLOCO DE ANEXOS/MATERIAL */
+/* 1. BLOCO DE ANEXOS/MATERIAL (LINK DE ÁREA TOTAL) */
 .bloco-anexo h4 {
     margin-bottom: 20px; 
 }
 
+
+/* Estilo do link que simula o item/bloco */
 .anexo-item {
     display: flex;
     align-items: center;
     gap: 15px;
     padding: 12px 15px; 
-    background-color: var(--btn-secondary-bg); 
+    background-color: var(--btn-secondary-bg);
+    border-left: 4px solid var(--color-pdf); 
     border-radius: 8px;
     margin-bottom: 20px;
     transition: background-color 0.2s; 
+    text-decoration: none; 
+    color: var(--text-primary); 
 }
 
 .anexo-item:hover {
@@ -108,7 +133,6 @@
 .anexo-item p {
     flex-grow: 1;
     font-weight: 500;
-    color: var(--text-primary);
     font-size: 15px;
 }
 
@@ -124,11 +148,7 @@
     border-radius: 50%;
     transition: background-color 0.2s, transform 0.2s; 
     line-height: 1; 
-}
-
-.anexo-item .btn-download:hover {
-    background-color: var(--line); 
-    color: var(--text-primary); 
+    cursor: pointer;
 }
 
 .prazo-info {
@@ -144,6 +164,10 @@
 /* 2 & 3. BLOCOS DE COMENTÁRIOS */
 .bloco-comentarios {
     padding: 20px 25px;
+}
+
+.bloco-comentarios.card{
+    border-left: 4px solid #147638;
 }
 
 .bloco-comentarios .header-comentario {
@@ -162,6 +186,7 @@
 .bloco-comentarios i {
     font-size: 24px;
     color: var(--text-secondary);
+    
 }
 
 .btn-adicionar-comentario {
@@ -182,27 +207,123 @@
     border-color: var(--text-secondary); 
 }
 
-/* 4. BOTÃO ACESSAR CONTEÚDOS */
-.acesso-conteudos {
-    margin-top: 10px;
-    padding: 0 10px; 
+/* --- ESTILOS DO CAMPO DE COMENTÁRIO EXPANDIDO --- */
+.comentario-input-container {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.btn-acessar-aulas {
-    background: var(--btn-secondary-bg); 
-    color: var(--text-secondary);
-    border: 1px solid var(--line);
-    padding: 12px 0;
-    border-radius: 8px;
+.comentario-textarea {
     width: 100%;
-    font-weight: 600;
-}
-
-.btn-acessar-aulas:hover {
-    background: var(--line);
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    font-size: 14px;
     color: var(--text-primary);
 }
 
+.comentario-textarea::placeholder {
+    color: var(--text-secondary);
+}
+
+.comentario-botoes-grupo {
+    display: flex;
+    justify-content: flex-end; /* Alinha botões à direita */
+    gap: 10px;
+}
+
+.btn-salvar-comentario {
+    background-color: var(--primary);
+    color: var(--btn-primary-text);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.btn-salvar-comentario:hover {
+    background-color: #1e7033;
+}
+
+h4:has(i.bxs-user-circle) i {
+    color: #1e7033; /* verde igual à borda dos comentários */
+}
+
+h4:has(i.bxs-group) i {
+    color: #1e7033; /* verde igual à borda dos comentários */
+}
+
+.btn-cancelar-comentario {
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-secondary);
+    padding: 8px 15px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.btn-cancelar-comentario:hover {
+    background-color: var(--line);
+}
+/* --- FIM DOS ESTILOS DO CAMPO DE COMENTÁRIO EXPANDIDO --- */
+
+
+/* --- BLOCO: CONTEÚDO DAS AULAS LATERAL (.bloco-aulas-lateral) --- */
+.bloco-aulas-lateral {
+    margin-top: 20px; 
+    padding: 20px 25px;
+}
+
+/* Estilização da Lista de Aulas (Altura Diminuída) */
+.lista-aulas {
+    padding-top: 10px;
+}
+
+.lista-aulas .topico-aula {
+    transition: all 0.3s ease;
+}
+
+.lista-aulas .topico-aula {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    
+    /* ALTURA REDUZIDA AQUI */
+    margin-bottom: 4px; 
+    padding: 2px 0;    
+}
+
+.lista-aulas .topico-aula i {
+    font-size: 16px; 
+    color: var(--primary); 
+    flex-shrink: 0; 
+}
+
+.lista-aulas .btn-ver-mais {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 15px;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.lista-aulas .btn-ver-mais:hover {
+    color: var(--primary);
+}
 
 /* --- COLUNA DIREITA (Tarefas) --- */
 
@@ -225,7 +346,7 @@
 
 .tarefa-aviso {
     font-size: 13px;
-    color: var(--text-primary); 
+    color: var(--color-alerta); 
     font-weight: 600;
     margin-bottom: 25px;
 }
@@ -233,7 +354,7 @@
 .botoes-acao-tarefa {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px; /* MAIOR SEPARAÇÃO ENTRE OS BOTÕES */
 }
 
 /* Estilo Base dos Botões de Ação na Coluna Direita */
@@ -247,11 +368,15 @@
     cursor: pointer;
     transition: background-color 0.2s ease;
     
-    /* 🚀 FIX: Garante que o texto esteja CENTRALIZADO (necessário após remover o ícone) */
     text-align: center; 
     display: block; 
 }
 
+/* ESTILO: BOTÕES DESABILITADOS */
+.bloco-tarefas .botao-acao:disabled {
+    cursor: not-allowed;
+    opacity: 1; /* Mantém a opacidade total */
+}
 
 /* Botão Principal (Adicionar) - Destaque em Verde */
 .btn-adicionar-arquivo {
@@ -264,16 +389,12 @@
     background: #1e7033;
 }
 
-/* Botão Secundário (Marcar como Entregue) - Fundo Cinza/Secundário */
-.btn-marcar-entregue {
-    background: var(--btn-secondary-bg);
-    color: var(--text-secondary);
-    border: 1px solid var(--line);
+/* ESTILO DO BOTÃO DE ANEXO QUANDO DESABILITADO (SUCESSO) */
+.btn-adicionar-arquivo:disabled {
+    background: #1a4a38; /* Um verde de sucesso */
+    color: var(--btn-primary-text);
 }
 
-.btn-marcar-entregue:hover {
-    background: var(--line);
-}
 
 /* 2. BOTÃO INFERIOR (Acessar Todas as Atividades) */
 .bloco-tarefas-inferior {
