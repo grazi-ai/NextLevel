@@ -1,0 +1,298 @@
+/* ======================================================= */
+/* === PÁGINA: ACESSAR ATIVIDADE (REVISADO FINAL) === */
+/* ======================================================= */
+
+/* --- VARIÁVEIS --- */
+:root {
+    --color-pdf: #ef4444; 
+    --color-download: #6b7280; 
+    
+    /* Sombra mais suave para todos os cards */
+    --card-shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.04), 0 6px 10px rgba(0, 0, 0, 0.02);
+    --card-border-color: #f1f1f1; 
+    
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --line: #e3e6f0;
+    --primary: #217d36; /* Verde principal (Ação Principal) */
+    --btn-primary-text: #fff;
+    --btn-secondary-bg: #f9fafb; /* Fundo mais claro para botões secundários */
+    
+    --tag-pendente-bg: #fffbe6;
+    --tag-pendente-text: #a16207;
+
+    --color-alerta: #dc2626; /* Vermelho forte para avisos */
+
+    /* Variável do fundo do card (se não estiver root principal) */
+    --card-bg: #fff;
+}
+
+/* --- LAYOUT DE DUAS COLUNAS --- */
+.atividade-view {
+    padding-top: 20px;
+}
+
+/* Título e Status na mesma linha */
+.atividade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    margin-bottom: 30px;
+}
+
+.atividade-header h1 {
+    font-size: 26px; 
+    margin-bottom: 5px;
+}
+
+.atividade-header p.muted {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.atividade-header .tag {
+    padding: 6px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    flex-shrink: 0; 
+}
+
+/* Estrutura principal: Grid de 70%/30% */
+.atividade-grid {
+    display: grid;
+    /* Coluna Esquerda 3fr | Coluna Direita 1fr (Total 4fr) */
+    grid-template-columns: 2.5fr 1.5fr; 
+    gap: 30px;
+}
+
+/* Estilo Base dos Cards (blocos brancos) */
+.atividade-grid .card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--card-shadow-soft);
+    border: 1px solid var(--card-border-color);
+    margin-bottom: 20px; 
+}
+
+/* Títulos dos cards internos */
+.atividade-grid .card h4 {
+    font-size: 16px;
+    font-weight: 700; 
+    color: var(--text-primary);
+}
+
+
+/* --- COLUNA ESQUERDA (Conteúdo) --- */
+
+/* 1. BLOCO DE ANEXOS/MATERIAL */
+.bloco-anexo h4 {
+    margin-bottom: 20px; 
+}
+
+.anexo-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px; 
+    background-color: var(--btn-secondary-bg); 
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: background-color 0.2s; 
+}
+
+.anexo-item:hover {
+    background-color: var(--line); 
+}
+
+.anexo-item p {
+    flex-grow: 1;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 15px;
+}
+
+.anexo-item .icon-pdf {
+    font-size: 30px; 
+    color: var(--color-pdf);
+}
+
+.anexo-item .btn-download {
+    color: var(--color-download);
+    font-size: 20px;
+    padding: 8px; 
+    border-radius: 50%;
+    transition: background-color 0.2s, transform 0.2s; 
+    line-height: 1; 
+}
+
+.anexo-item .btn-download:hover {
+    background-color: var(--line); 
+    color: var(--text-primary); 
+}
+
+.prazo-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-top: 10px; 
+    border-top: 1px solid var(--line); 
+    margin-top: 10px;
+}
+
+
+/* 2 & 3. BLOCOS DE COMENTÁRIOS */
+.bloco-comentarios {
+    padding: 20px 25px;
+}
+
+.bloco-comentarios .header-comentario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px; 
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--card-border-color); 
+}
+
+.bloco-comentarios h4 {
+    font-weight: 600;
+}
+
+.bloco-comentarios i {
+    font-size: 24px;
+    color: var(--text-secondary);
+}
+
+.btn-adicionar-comentario {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 2px dashed var(--line); 
+    padding: 12px 15px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-adicionar-comentario:hover {
+    background: var(--btn-secondary-bg);
+    border-color: var(--text-secondary); 
+}
+
+/* 4. BOTÃO ACESSAR CONTEÚDOS */
+.acesso-conteudos {
+    margin-top: 10px;
+    padding: 0 10px; 
+}
+
+.btn-acessar-aulas {
+    background: var(--btn-secondary-bg); 
+    color: var(--text-secondary);
+    border: 1px solid var(--line);
+    padding: 12px 0;
+    border-radius: 8px;
+    width: 100%;
+    font-weight: 600;
+}
+
+.btn-acessar-aulas:hover {
+    background: var(--line);
+    color: var(--text-primary);
+}
+
+
+/* --- COLUNA DIREITA (Tarefas) --- */
+
+.coluna-tarefas h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.bloco-tarefas {
+    padding: 25px;
+}
+
+.tarefa-nota-info {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.tarefa-aviso {
+    font-size: 13px;
+    color: var(--text-primary); 
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.botoes-acao-tarefa {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Estilo Base dos Botões de Ação na Coluna Direita */
+.bloco-tarefas .botao-acao {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    /* 🚀 FIX: Garante que o texto esteja CENTRALIZADO (necessário após remover o ícone) */
+    text-align: center; 
+    display: block; 
+}
+
+
+/* Botão Principal (Adicionar) - Destaque em Verde */
+.btn-adicionar-arquivo {
+    background: var(--primary);
+    color: var(--btn-primary-text);
+    border: none;
+}
+
+.btn-adicionar-arquivo:hover {
+    background: #1e7033;
+}
+
+/* Botão Secundário (Marcar como Entregue) - Fundo Cinza/Secundário */
+.btn-marcar-entregue {
+    background: var(--btn-secondary-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--line);
+}
+
+.btn-marcar-entregue:hover {
+    background: var(--line);
+}
+
+/* 2. BOTÃO INFERIOR (Acessar Todas as Atividades) */
+.bloco-tarefas-inferior {
+    padding: 15px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.btn-todas-atividades {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 0;
+}
+
+.btn-todas-atividades:hover {
+    color: var(--primary); 
+    text-decoration: underline; 
+}
