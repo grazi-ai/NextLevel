@@ -40,10 +40,18 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.removeItem('status_Historia');
   }
 
+  if (performance.getEntriesByType('navigation')[0].type === 'reload') {
+    localStorage.removeItem('status_Literatura');
+  }
 
   // Também limpa se o Live Server for fechado e reaberto (nova sessão)
   if (!sessionStorage.getItem('sessaoIniciada')) {
     localStorage.removeItem('status_Historia');
+    sessionStorage.setItem('sessaoIniciada', 'true');
+  }
+
+  if (!sessionStorage.getItem('sessaoIniciada')) {
+    localStorage.removeItem('status_Literatura');
     sessionStorage.setItem('sessaoIniciada', 'true');
   }
 
@@ -167,61 +175,50 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
       }
-
     }
 
     // ===================================================================
     //     5.1. LÓGICA DE ATUALIZAÇÃO DE STATUS (Página contEatv.html)
     // ===================================================================
 
-    // Verifica se estamos na seção de atividades na página contEatv
     const atividadesGrid = document.getElementById('atividades-tarefas');
 
     if (atividadesGrid) {
-      // Busca o status de 'História' salvo
-      const statusHistoria = localStorage.getItem('status_Historia');
 
-      // Se a atividade de História foi marcada como 'Entregue'
-      if (statusHistoria === 'Entregue') {
+      const materias = ["Historia", "Literatura", "Matematica", "Fisica"];
 
-        // Encontra o card de História na seção de atividades
-        // NOTE: Dependemos da ordem ou de uma forma de identificar o card.
-        // O card de História é o primeiro <article> com a classe .atividade-card .pendente
-        const cardHistoria = document.querySelector('.atividade-card.pendente');
+      materias.forEach(id => {
 
-        if (cardHistoria && cardHistoria.querySelector('.titulo-atividade').textContent.trim() === 'História') {
+        const status = localStorage.getItem(`status_${id}`);
+        const card = document.querySelector(`.atividade-card[data-atividade-id="${id}"]`);
 
-          // 1. Atualiza a classe do card (para estilo de "Entregue")
-          cardHistoria.classList.remove('pendente');
-          cardHistoria.classList.add('completa');
+        if (!card || !status) return;
 
-          // 2. Atualiza o texto da tag de status
-          const tagStatus = cardHistoria.querySelector('.tag');
-          tagStatus.textContent = 'Entregue';
-          tagStatus.classList.remove('tag-pendente');
-          tagStatus.classList.add('tag-entregue');
+        const tag = card.querySelector(".tag");
+        const botao = card.querySelector(".botao-acao, .botao-acao-lit, .botao-acao-fis");
 
-          // 3. Atualiza o botão de ação
-          const botaoAcao = cardHistoria.querySelector('.botao-acao');
-          botaoAcao.textContent = 'Ver detalhes';
-          botaoAcao.classList.remove('btn-realizar');
-          botaoAcao.classList.add('btn-detalhes');
+        if (status === "Entregue") {
+          card.classList.remove("pendente");
+          card.classList.add("completa");
 
-          // 4. Garante que o redirecionamento do novo botão funcione (referente à Seção 9)
-          // É preciso remover o listener antigo e adicionar o novo para "Ver Detalhes"
-          // (Você deve garantir que a remoção do listener de 'Realizar Tarefa' não cause problemas se já houver um. 
-          // Para simplificar o teste, vamos apenas garantir que o novo listener esteja ativo, mesmo se o antigo existir no DOMContentLoaded)
+          tag.textContent = "Entregue";
+          tag.classList.remove('tag-pendente');
+          tag.classList.add('tag-entregue');
 
-          // Adiciona o novo listener para "Ver detalhes" (Redireciona para a página da atividade)
-          botaoAcao.addEventListener("click", () => {
-            window.location.href = "/NextLevel/HTML/acessarAtividades_Hist.html";
-          });
+          if (botao) {
+            botao.textContent = "Ver detalhes";
+            botao.classList.remove("btn-realizar", "btn-realizar-lit");
+            botao.classList.add("btn-detalhes");
+          }
 
+        } else {
+          // Caso queira voltar para pendente manualmente
+          card.classList.add("pendente");
         }
 
-
-      }
+      });
     }
+
 
     // ===================================================================
     //      6. LÓGICA DE COMENTÁRIOS (Botão "Adicionar Comentário")
@@ -311,59 +308,56 @@ document.addEventListener("DOMContentLoaded", function () {
     //     7. LÓGICA DO BOTÃO "ADICIONAR ARQUIVO" (Entrega automática)
     // ===================================================================
 
-    // Só executa na página acessarAtividades.html
     const btnAdicionarArquivo = document.querySelector('.btn-adicionar-arquivo');
     const statusTag = document.querySelector('.atividade-header .tag');
     const blocoTarefas = document.querySelector('.bloco-tarefas');
-    // NOVO: Pega o ID da atividade no atributo data
     const atividadeView = document.querySelector('.atividade-view');
     const atividadeId = atividadeView ? atividadeView.getAttribute('data-atividade-id') : null;
 
+    // ✅ MOSTRAR STATUS SALVO AO ABRIR A PÁGINA
+    if (atividadeId) {
+      const saved = localStorage.getItem(`status_${atividadeId}`);
 
-    // 🔹 Remove o botão "Marcar como Entregue", se existir no HTML
-    const btnMarcarEntregue = document.querySelector('.btn-marcar-entregue');
-    if (btnMarcarEntregue) {
-      btnMarcarEntregue.remove();
+      if (saved === "Entregue") {
+        // Atualiza a tag
+        statusTag.textContent = "Entregue";
+        statusTag.classList.remove("tag-pendente");
+        statusTag.classList.add("tag-entregue");
+
+        // Atualiza o botão de enviar arquivo
+        btnAdicionarArquivo.textContent = "Arquivo Enviado";
+        btnAdicionarArquivo.disabled = true;
+      }
     }
 
-    // 🔹 Quando clicar no botão "Adicionar"
+    // ✅ EVENTO DE UPLOAD
     if (btnAdicionarArquivo) {
       btnAdicionarArquivo.addEventListener('click', function () {
-        // Cria o seletor de arquivo dinamicamente
         const seletor = document.createElement('input');
         seletor.type = 'file';
-        seletor.accept = '*/*'; // aceita qualquer tipo de arquivo
+        seletor.accept = '*/*';
 
-        // Quando o aluno escolher um arquivo
         seletor.addEventListener('change', function () {
           if (seletor.files.length > 0) {
-            const nomeArquivo = seletor.files[0].name;
-
-            // Exibe mensagem de sucesso
             alert(`Arquivo enviado com sucesso!`);
 
-            // Atualiza o botão
             btnAdicionarArquivo.textContent = "Arquivo Enviado";
             btnAdicionarArquivo.disabled = true;
 
-            // Atualiza o status visual da atividade
-            if (statusTag) {
-              statusTag.textContent = "Entregue";
-              statusTag.classList.remove('tag-pendente');
-              statusTag.classList.add('tag-entregue');
-            }
+            // Atualiza o status visual
+            statusTag.textContent = "Entregue";
+            statusTag.classList.add("tag-entregue");
+            statusTag.classList.remove("tag-pendente");
 
-            // NOVO: Salva o status "Entregue" no localStorage
-            if (atividadeId) {
-              localStorage.setItem(`status_${atividadeId}`, 'Entregue');
-            }
+            // SALVA no localStorage
+            localStorage.setItem(`status_${atividadeId}`, "Entregue");
           }
         });
 
-        // Abre o seletor
         seletor.click();
       });
     }
+
 
     // ===================================================================
     //      8. BOTÃO "ACESSAR TODAS AS ATIVIDADES"
@@ -383,30 +377,29 @@ document.addEventListener("DOMContentLoaded", function () {
     //     9. SALVAR ABA ANTES DE REDIRECIONAR PARA DETALHES
     // ===================================================================
 
-    const botoesAtividade = document.querySelectorAll(".btn-realizar, .btn-detalhes, .btn-detalhes-fis");
+    const botoesAtividade = document.querySelectorAll(
+      ".btn-realizar, .btn-realizar-lit, .btn-detalhes, .btn-detalhes-fis, .btn-detalhes-lit"
+    );
 
     botoesAtividade.forEach(botao => {
       botao.addEventListener("click", () => {
-        // Salva a preferência da aba 'Atividades' no localStorage antes de sair
+
+        // Mantém aba de atividades ao voltar
         localStorage.setItem('abaAtivaContEatv', 'atividades-tarefas');
 
-        // Determina o redirecionamento (lógica copiada da Seção 9 existente)
-        let urlRedirecionamento = "/NextLevel/HTML/contEatv.html"; // Default
+        // Pega o card da atividade que foi clicado
+        const card = botao.closest('.atividade-card');
+        const id = card.getAttribute('data-atividade-id');
+        // Ex: "Matematica", "Literatura", "Fisica", "Historia"
 
-        if (botao.classList.contains("btn-realizar")) {
-          // Este botão só existe no card de História (no HTML inicial)
-          urlRedirecionamento = "/NextLevel/HTML/acessarAtividades_Hist.html";
-        } else if (botao.classList.contains("btn-detalhes")) {
-          // Este botão só existe no card de Matemática (no HTML inicial)
-          urlRedirecionamento = "/NextLevel/HTML/acessarAtividades_Mat.html";
-        } else if (botao.classList.contains("btn-detalhes-fis")) {
-          // Este botão só existe no card de Fisica (no HTML inicial)
-          urlRedirecionamento = "/NextLevel/HTML/acessarAtividades_Fisica.html";
-        }
+        // Monta o nome do arquivo automaticamente
+        const url = `/NextLevel/HTML/acessarAtividades_${id}.html`;
+
         // Redireciona
-        window.location.href = urlRedirecionamento;
+        window.location.href = url;
       });
     });
+
 
     // ===================================================================
     //      10. BOTÃO "VER TODOS OS TÓPICOS" — Expande lista de aulas
@@ -454,6 +447,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
           btnVerMais.textContent = "Mostrar menos";
           btnVerMais.classList.add("expandido");
+
+        }
+      });
+    }
+
+    // PARTE DE LITERATURA 
+
+    const btnVerMaisLit = document.querySelector(".btn-ver-mais-lit");
+    const listaAulasLit = document.querySelector(".lista-aulas-lit");
+
+    if (btnVerMaisLit && listaAulas) {
+      btnVerMaisLit.addEventListener("click", () => {
+        // Verifica se já foi expandido
+        if (btnVerMaisLit.classList.contains("expandido")) {
+          // Recolhe novamente
+          const aulas = listaAulasLit.querySelectorAll(".topico-aula-lit");
+          aulas.forEach((aula, i) => {
+            if (i >= 3) aula.style.display = "none";
+          });
+          btnVerMaisLit.textContent = "Ver todos os 8 tópicos";
+          btnVerMaisLit.classList.remove("expandido");
+        } else {
+          // Adiciona mais 4 tópicos (simulação)
+          const aulasExtrasLit = [
+            "Aula 1: O Regionalismo na Segunda Geração Modernista",
+            "Aula 2: Graciliano Ramos: Vida e Obra",
+            "Aula 3: Análise do Capítulo: Fabiano",
+          ];
+
+          // Verifica se já existem
+          const aulasExistentes = listaAulasLit.querySelectorAll(".topico-aula-lit").length;
+          if (aulasExistentes < 3) {
+            aulasExtrasLit.forEach(texto => {
+              const p = document.createElement("p");
+              p.classList.add("topico-aula-lit");
+              p.innerHTML = `${texto}`;
+              listaAulas.insertBefore(p, btnVerMaisLit);
+            });
+          } else {
+            // Apenas mostra as escondidas (se já tiver sido expandido uma vez)
+            const aulas = listaAulasLit.querySelectorAll(".topico-aula-lit");
+            aulas.forEach(aula => aula.style.display = "flex");
+          }
+
+          btnVerMaisLit.textContent = "Mostrar menos";
+          btnVerMaisLit.classList.add("expandido");
 
         }
       });
