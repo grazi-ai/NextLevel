@@ -8,16 +8,16 @@
 
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="/NextLevel/CSS/gradecur.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/documentos.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/notas.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/faltas.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/comprov.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/dashboard.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/acessarAtividades.css">
+    <link rel="stylesheet" href="/CSS/gradecur.css">
+    <link rel="stylesheet" href="/CSS/documentos.css">
+    <link rel="stylesheet" href="/CSS/notas.css">
+    <link rel="stylesheet" href="/CSS/faltas.css">
+    <link rel="stylesheet" href="/CSS/comprov.css">
+    <link rel="stylesheet" href="/CSS/dashboard.css">
+    <link rel="stylesheet" href="/CSS/acessarAtividades.css">
 
-    <link rel="stylesheet" href="/NextLevel/CSS/contAtivs.css">
-    <link rel="stylesheet" href="/NextLevel/CSS/contAulas.css">
+    <link rel="stylesheet" href="/CSS/contAtivs.css">
+    <link rel="stylesheet" href="/CSS/contAulas.css">
 
 </head>
 
@@ -26,7 +26,7 @@
     <aside class="sidebar">
         <div class="brand">
             <div class="logo">
-                <img src="/NextLevel/IMG/logo.jpeg" alt="Logomarca NextLevel">
+                <img src="/IMG/logo.jpeg" alt="Logomarca NextLevel">
             </div>
             <div class="name">
                 <b>NextLevel</b>
@@ -35,13 +35,15 @@
         </div>
 
         <nav class="menu">
-            <a href="/NextLevel/HTML/home.html"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
-            <a href="/NextLevel/HTML/docum.html"><i class='bx bxs-file'></i><span>Documentos</span></a>
-            <a href="/NextLevel/HTML/notaEfalta.html"><i class='bx bxs-edit-alt'></i> <span> Notas e Faltas </span></a>
-            <a href="/NextLevel/HTML/gradecurri.html"><i class='bx bxs-grid-alt'></i><span>Grade Curricular</span></a>
-            <a class="active" href="/NextLevel/HTML/contEatv.html"><i class='bx bxs-chalkboard'></i><span>Conteúdos e
+            <a href="/HTML/home.html"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+            <a href="/HTML/docum.html"><i class='bx bxs-file'></i><span>Documentos</span></a>
+            <a href="/HTML/notaEfalta.html"><i class='bx bxs-edit-alt'></i> <span> Notas e Faltas </span></a>
+            <a href="/HTML/gradecurri.html"><i class='bx bxs-grid-alt'></i><span>Grade Curricular</span></a>
+            <a class="active" href="/HTML/contEatv.html"><i class='bx bxs-chalkboard'></i><span>Conteúdos e
                     Atividades</span></a>
-            <a href="/NextLevel/HTML/comprovante.html"><i class='bx bxs-receipt'></i><span>Comprovantes</span></a>
+            <a href="/HTML/comprovante.html"><i class='bx bxs-receipt'></i><span>Comprovantes</span></a>
+
+            <script src="/JS/script.js"></script>
 
         </nav>
 
@@ -161,14 +163,14 @@
 
         <section class="atividades-grid aba-content" id="atividades-tarefas" style="display: none;">
 
-            <article class="atividade-card pendente">
+            <article class="atividade-card pendente" data-atividade-id="Historia">
                 <div class="card-header">
                     <h5 class="titulo-atividade">História</h5>
-                    <span class="tag tag-pendente">Pendente</span>
+                    <span class="tag tag-pendente tag-status-atividade">Pendente</span>
                 </div>
                 <p class="detalhe-topico">
                     <span class="topico-status">Última Tarefa:</span>
-                    <span class="descricao">Resumo da Guerra Fria: Medo e Silêncio</span>
+                    <span class="descricao">Lista de Exercício - Guerra Fria</span>
                 </p>
 
                 <div class="card-footer">
@@ -184,10 +186,10 @@
                 <button class="botao-acao btn-realizar">Realizar tarefa</button>
             </article>
 
-            <article class="atividade-card completa">
+            <article class="atividade-card completa" data-atividade-id="Matematica">
                 <div class="card-header">
                     <h5 class="titulo-atividade">Matemática</h5>
-                    <span class="tag tag-entregue">Entregue</span>
+                    <span class="tag tag-entregue tag-status-atividade">Entregue</span>
                 </div>
                 <p class="detalhe-topico">
                     <span class="topico-status">Última Tarefa:</span>
@@ -207,10 +209,10 @@
                 <button class="botao-acao btn-detalhes">Ver detalhes</button>
             </article>
 
-            <article class="atividade-card pendente">
+            <article class="atividade-card pendente" data-atividade-id="Literatura">
                 <div class="card-header">
                     <h5 class="titulo-atividade">Literatura</h5>
-                    <span class="tag tag-pendente">Pendente</span>
+                    <span class="tag tag-pendente tag-status-atividade">Pendente</span>
                 </div>
                 <p class="detalhe-topico">
                     <span class="topico-status">Última Tarefa:</span>
@@ -227,13 +229,13 @@
                         <p>3 pontos</p>
                     </div>
                 </div>
-                <button class="botao-acao btn-realizar">Realizar tarefa</button>
+                <button class="botao-acao-lit btn-realizar-lit">Realizar tarefa</button>
             </article>
 
-            <article class="atividade-card completa">
+            <article class="atividade-card completa" data-atividade-id="Fisica">
                 <div class="card-header">
                     <h5 class="titulo-atividade">Física</h5>
-                    <span class="tag tag-entregue">Entregue</span>
+                    <span class="tag tag-entregue tag-status-atividade">Entregue</span>
                 </div>
                 <p class="detalhe-topico">
                     <span class="topico-status">Última Tarefa:</span>
@@ -250,13 +252,13 @@
                         <p>3 pontos</p>
                     </div>
                 </div>
-                <button class="botao-acao btn-detalhes">Ver detalhes</button>
+                <button class="botao-acao-fis btn-detalhes-fis">Ver detalhes</button>
             </article>
 
         </section>
 
     </main>
-    <script src="/NextLevel/JS/script.js"></script>
+
 </body>
 
 </html>
