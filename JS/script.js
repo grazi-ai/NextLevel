@@ -33,6 +33,20 @@ function renderizarTabelaDocumentos() {
 
 document.addEventListener("DOMContentLoaded", function () {
 
+  // ===================================================================
+  // LIMPAR STATUS AO REINICIAR O SERVIDOR OU RECARREGAR O PROJETO
+  // ===================================================================
+  if (performance.getEntriesByType('navigation')[0].type === 'reload') {
+    localStorage.removeItem('status_Historia');
+  }
+
+
+  // Também limpa se o Live Server for fechado e reaberto (nova sessão)
+  if (!sessionStorage.getItem('sessaoIniciada')) {
+    localStorage.removeItem('status_Historia');
+    sessionStorage.setItem('sessaoIniciada', 'true');
+  }
+
   const form = document.getElementById("formLogin");
 
   // Se o formulário de login não for encontrado, estamos em um painel.
@@ -157,6 +171,59 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ===================================================================
+    //     5.1. LÓGICA DE ATUALIZAÇÃO DE STATUS (Página contEatv.html)
+    // ===================================================================
+
+    // Verifica se estamos na seção de atividades na página contEatv
+    const atividadesGrid = document.getElementById('atividades-tarefas');
+
+    if (atividadesGrid) {
+      // Busca o status de 'História' salvo
+      const statusHistoria = localStorage.getItem('status_Historia');
+
+      // Se a atividade de História foi marcada como 'Entregue'
+      if (statusHistoria === 'Entregue') {
+
+        // Encontra o card de História na seção de atividades
+        // NOTE: Dependemos da ordem ou de uma forma de identificar o card.
+        // O card de História é o primeiro <article> com a classe .atividade-card .pendente
+        const cardHistoria = document.querySelector('.atividade-card.pendente');
+
+        if (cardHistoria && cardHistoria.querySelector('.titulo-atividade').textContent.trim() === 'História') {
+
+          // 1. Atualiza a classe do card (para estilo de "Entregue")
+          cardHistoria.classList.remove('pendente');
+          cardHistoria.classList.add('completa');
+
+          // 2. Atualiza o texto da tag de status
+          const tagStatus = cardHistoria.querySelector('.tag');
+          tagStatus.textContent = 'Entregue';
+          tagStatus.classList.remove('tag-pendente');
+          tagStatus.classList.add('tag-entregue');
+
+          // 3. Atualiza o botão de ação
+          const botaoAcao = cardHistoria.querySelector('.botao-acao');
+          botaoAcao.textContent = 'Ver detalhes';
+          botaoAcao.classList.remove('btn-realizar');
+          botaoAcao.classList.add('btn-detalhes');
+
+          // 4. Garante que o redirecionamento do novo botão funcione (referente à Seção 9)
+          // É preciso remover o listener antigo e adicionar o novo para "Ver Detalhes"
+          // (Você deve garantir que a remoção do listener de 'Realizar Tarefa' não cause problemas se já houver um. 
+          // Para simplificar o teste, vamos apenas garantir que o novo listener esteja ativo, mesmo se o antigo existir no DOMContentLoaded)
+
+          // Adiciona o novo listener para "Ver detalhes" (Redireciona para a página da atividade)
+          botaoAcao.addEventListener("click", () => {
+            window.location.href = "/NextLevel/HTML/acessarAtividades_Hist.html";
+          });
+
+        }
+
+
+      }
+    }
+
+    // ===================================================================
     //      6. LÓGICA DE COMENTÁRIOS (Botão "Adicionar Comentário")
     // ===================================================================
 
@@ -241,13 +308,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ===================================================================
-    //      7. LÓGICA DO BOTÃO "ADICIONAR ARQUIVO" (Entrega automática)
+    //     7. LÓGICA DO BOTÃO "ADICIONAR ARQUIVO" (Entrega automática)
     // ===================================================================
 
     // Só executa na página acessarAtividades.html
     const btnAdicionarArquivo = document.querySelector('.btn-adicionar-arquivo');
     const statusTag = document.querySelector('.atividade-header .tag');
     const blocoTarefas = document.querySelector('.bloco-tarefas');
+    // NOVO: Pega o ID da atividade no atributo data
+    const atividadeView = document.querySelector('.atividade-view');
+    const atividadeId = atividadeView ? atividadeView.getAttribute('data-atividade-id') : null;
+
 
     // 🔹 Remove o botão "Marcar como Entregue", se existir no HTML
     const btnMarcarEntregue = document.querySelector('.btn-marcar-entregue');
@@ -269,7 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const nomeArquivo = seletor.files[0].name;
 
             // Exibe mensagem de sucesso
-            alert(`Arquivo "${nomeArquivo}" enviado com sucesso!`);
+            alert(`Arquivo enviado com sucesso!`);
 
             // Atualiza o botão
             btnAdicionarArquivo.textContent = "Arquivo Enviado";
@@ -282,14 +353,10 @@ document.addEventListener("DOMContentLoaded", function () {
               statusTag.classList.add('tag-entregue');
             }
 
-            // Opcional: adiciona uma linha informando o nome do arquivo enviado
-            const arquivoInfo = document.createElement('p');
-            arquivoInfo.classList.add('arquivo-info');
-            arquivoInfo.textContent = `📎 ${nomeArquivo}`;
-            arquivoInfo.style.marginTop = "10px";
-            arquivoInfo.style.fontSize = "14px";
-            arquivoInfo.style.color = "var(--text-secondary)";
-            blocoTarefas.appendChild(arquivoInfo);
+            // NOVO: Salva o status "Entregue" no localStorage
+            if (atividadeId) {
+              localStorage.setItem(`status_${atividadeId}`, 'Entregue');
+            }
           }
         });
 
@@ -311,21 +378,41 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
+
     // ===================================================================
-    //      9. BOTÃO "REALIZAR TAREFA" — vai para acessarAtividades.html
+    //     9. SALVAR ABA ANTES DE REDIRECIONAR PARA DETALHES
     // ===================================================================
 
-    const botoesRealizar = document.querySelectorAll(".btn-realizar");
+    const botoesAtividade = document.querySelectorAll(".btn-realizar, .btn-detalhes, .btn-detalhes-fis");
 
-    botoesRealizar.forEach(botao => {
+    botoesAtividade.forEach(botao => {
       botao.addEventListener("click", () => {
-        window.location.href = "/NextLevel/HTML/acessarAtividades.html";
+        // Salva a preferência da aba 'Atividades' no localStorage antes de sair
+        localStorage.setItem('abaAtivaContEatv', 'atividades-tarefas');
+
+        // Determina o redirecionamento (lógica copiada da Seção 9 existente)
+        let urlRedirecionamento = "/NextLevel/HTML/contEatv.html"; // Default
+
+        if (botao.classList.contains("btn-realizar")) {
+          // Este botão só existe no card de História (no HTML inicial)
+          urlRedirecionamento = "/NextLevel/HTML/acessarAtividades_Hist.html";
+        } else if (botao.classList.contains("btn-detalhes")) {
+          // Este botão só existe no card de Matemática (no HTML inicial)
+          urlRedirecionamento = "/NextLevel/HTML/acessarAtividades_Mat.html";
+        } else if (botao.classList.contains("btn-detalhes-fis")) {
+          // Este botão só existe no card de Fisica (no HTML inicial)
+          urlRedirecionamento = "/NextLevel/HTML/acessarAtividades_Fisica.html";
+        }
+        // Redireciona
+        window.location.href = urlRedirecionamento;
       });
     });
 
     // ===================================================================
     //      10. BOTÃO "VER TODOS OS TÓPICOS" — Expande lista de aulas
     // ===================================================================
+
+    // PARTE DE HISTÓRIA 
 
     const btnVerMais = document.querySelector(".btn-ver-mais");
     const listaAulas = document.querySelector(".lista-aulas");
@@ -356,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
             aulasExtras.forEach(texto => {
               const p = document.createElement("p");
               p.classList.add("topico-aula");
-              p.innerHTML = `<i class='bx bx-check-circle'></i> ${texto}`;
+              p.innerHTML = `${texto}`;
               listaAulas.insertBefore(p, btnVerMais);
             });
           } else {
@@ -367,11 +454,104 @@ document.addEventListener("DOMContentLoaded", function () {
 
           btnVerMais.textContent = "Mostrar menos";
           btnVerMais.classList.add("expandido");
+
+        }
+      });
+    }
+
+    // PARTE DE MATEMÄTICA 
+    const btnVerMaisMat = document.querySelector(".btn-ver-mais-mat");
+    const listaAulasMat = document.querySelector(".lista-aulas-mat");
+
+    if (btnVerMaisMat && listaAulasMat) {
+      btnVerMaisMat.addEventListener("click", () => {
+        // Verifica se já foi expandido
+        if (btnVerMaisMat.classList.contains("expandido")) {
+          // Recolhe novamente
+          const aulas = listaAulasMat.querySelectorAll(".topico-aula-mat");
+          aulas.forEach((aula, i) => {
+            if (i >= 3) aula.style.display = "none";
+          });
+          btnVerMaisMat.textContent = "Ver todos os 7 tópicos";
+          btnVerMaisMat.classList.remove("expandido");
+        } else {
+          // Adiciona mais 4 tópicos (simulação)
+          const aulasExtrasMat = [
+            "Aula 4: Problemas de Taxas Relacionadas",
+            "Aula 5: Derivadas de Funções Trigonométricas",
+            "Aula 6: Derivadas Implícitas e Inversas",
+            "Aula 7: Análise de Gráficos e Pontos Críticos"
+          ];
+
+          // Verifica se já existem
+          const aulasExistentes = listaAulasMat.querySelectorAll(".topico-aula-mat").length;
+          if (aulasExistentes < 7) {
+            aulasExtrasMat.forEach(texto => {
+              const p = document.createElement("p");
+              p.classList.add("topico-aula-mat");
+              p.innerHTML = `${texto}`;
+              listaAulasMat.insertBefore(p, btnVerMaisMat);
+            });
+          } else {
+            // Apenas mostra as escondidas (se já tiver sido expandido uma vez)
+            const aulas = listaAulasMat.querySelectorAll(".topico-aula-mat");
+            aulas.forEach(aula => aula.style.display = "flex");
+          }
+
+          btnVerMaisMat.textContent = "Mostrar menos";
+          btnVerMaisMat.classList.add("expandido");
+        }
+      });
+    }
+
+    // PARTE DE FISICA 
+    const btnVerMaisFis = document.querySelector(".btn-ver-mais-fis");
+    const listaAulasFis = document.querySelector(".lista-aulas-fis");
+
+    if (btnVerMaisFis && listaAulasFis) {
+      btnVerMaisFis.addEventListener("click", () => {
+        // Verifica se já foi expandido
+        if (btnVerMaisFis.classList.contains("expandido")) {
+          // Recolhe novamente
+          const aulas = listaAulasFis.querySelectorAll(".topico-aula-fis");
+          aulas.forEach((aula, i) => {
+            if (i >= 3) aula.style.display = "none";
+          });
+          btnVerMaisFis.textContent = "Ver todos os 7 tópicos";
+          btnVerMaisFis.classList.remove("expandido");
+        } else {
+          // Adiciona mais 4 tópicos (simulação)
+          const aulasExtrasFis = [
+            "Aula 4: Trabalho e Energia Mecânica",
+            "Aula 5: Vetores e Movimento Retilíneo",
+            "Aula 6: Unidades de Medida e Conversões no SI",
+            "Aula 7: Introdução à Física e Grandezas Fundamentais"
+          ];
+
+          // Verifica se já existem
+          const aulasExistentes = listaAulasFis.querySelectorAll(".topico-aula-fis").length;
+          if (aulasExistentes < 7) {
+            aulasExtrasFis.forEach(texto => {
+              const p = document.createElement("p");
+              p.classList.add("topico-aula-fis");
+              p.innerHTML = `${texto}`;
+              listaAulasFis.insertBefore(p, btnVerMaisFis);
+            });
+          } else {
+            // Apenas mostra as escondidas (se já tiver sido expandido uma vez)
+            const aulas = listaAulasFis.querySelectorAll(".topico-aula-fis");
+            aulas.forEach(aula => aula.style.display = "flex");
+          }
+
+          btnVerMaisFis.textContent = "Mostrar menos";
+          btnVerMaisFis.classList.add("expandido");
         }
       });
     }
 
   } else {
+
+
     // -------------------------------------------------------------------
     //      -- Lógica de Login (só executa se o form existir) --
     // -------------------------------------------------------------------

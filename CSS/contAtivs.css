@@ -287,6 +287,31 @@
     background: var(--line);
 }
 
+
+/* Estilo dos botões de ação FISICA*/
+.atividade-card .botao-acao-fis {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+
+/* Estilo Base do Botão Secundário*/
+.atividade-card .btn-detalhes-fis {
+    background: var(--panel); 
+    color: var(--text-secondary);
+    border: 1px solid var(--line);
+}
+
+.atividade-card .btn-detalhes-fis:hover {
+    background: var(--line);
+}
+
 /* ======================================================= */
 /* Aumenta a Especificidade para anular a borda verde no Foco/Clique */
 /* ======================================================= */
