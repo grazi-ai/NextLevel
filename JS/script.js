@@ -466,7 +466,7 @@ document.addEventListener("DOMContentLoaded", function () {
           btnVerMaisLit.textContent = "Ver todos os 8 tópicos";
           btnVerMaisLit.classList.remove("expandido");
         } else {
-          // Tópicos extras (você já tinha definido 5, totalizando 8)
+          
           const aulasExtrasLit = [
             "Aula 4: A Psicologia de Sinhá Vitória e Baleia",
             "Aula 5: O Ciclo da Seca e a Crítica Social",
